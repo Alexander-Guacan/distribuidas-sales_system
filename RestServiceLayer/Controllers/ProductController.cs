@@ -25,7 +25,7 @@ namespace RestServiceLayer.Controllers
             return isDeleted;
         }
 
-        [HttpGet("/CategoryId/{categoryId}")]
+        [HttpGet("CategoryId/{categoryId}")]
         public List<Product> FilterByCategoryId(int categoryId)
         {
             var productLogic = new ProductLogic();
