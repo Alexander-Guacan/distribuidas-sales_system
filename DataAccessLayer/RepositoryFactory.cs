@@ -1,4 +1,4 @@
-using DataAccessLayer.Models;
+using DataAccessLayer.Data;
 
 namespace DataAccessLayer;
 
@@ -6,6 +6,6 @@ public class RepositoryFactory
 {
     public static IRepository CreateRepository()
     {
-        return new EntityFrameworkRepository(new SalesDbContext());
+        return new EntityFrameworkRepository(new ApplicationDbContext());
     }
 }
