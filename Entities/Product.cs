@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Entities;
 
@@ -21,5 +22,6 @@ public partial class Product
     public int UnitsInStock { get; set; }
 
     [DataMember]
-    public virtual Category Category { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Category? Category { get; set; }
 }
