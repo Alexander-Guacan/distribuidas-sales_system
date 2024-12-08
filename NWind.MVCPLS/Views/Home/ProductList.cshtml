@@ -1,0 +1,21 @@
+@model List<Entities.Product>
+
+<body>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio unitario</th>
+            <th>Unidades en existencia</th>
+        </tr>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(product.ProductId.ToString(), "Details", new { id = product.ProductId })</td>
+                <td>@product.ProductName</td>
+                <td>@product.UnitPrice</td>
+                <td>@product.UnitsInStock</td>
+            </tr>
+        }
+    </table>
+</body>
