@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Entities;
 
@@ -14,7 +15,7 @@ public partial class Category
     [DataMember]
     public string? Description { get; set; }
 
-    [System.Text.Json.Serialization.JsonIgnore]
+    [JsonIgnore]
     [IgnoreDataMember]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

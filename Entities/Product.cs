@@ -21,7 +21,7 @@ public partial class Product
     [DataMember]
     public int UnitsInStock { get; set; }
 
-    [DataMember]
+    [IgnoreDataMember]
     [JsonIgnore]
     public virtual Category? Category { get; set; }
 }
