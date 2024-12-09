@@ -33,6 +33,13 @@ CREATE TABLE RolePermissions (
     PRIMARY KEY (RoleId, PermissionId)
 );
 
+-- Tabla de Categorías
+CREATE TABLE Categories (
+    CategoryId INT PRIMARY KEY IDENTITY,
+    CategoryName NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255)
+);
+
 -- Tabla de Productos
 CREATE TABLE Products (
     ProductId INT PRIMARY KEY IDENTITY,
@@ -41,13 +48,6 @@ CREATE TABLE Products (
     UnitPrice DECIMAL(18, 2) NOT NULL,
     UnitsInStock INT NOT NULL,
     IsActive BIT NOT NULL DEFAULT 1
-);
-
--- Tabla de Categorías
-CREATE TABLE Categories (
-    CategoryId INT PRIMARY KEY IDENTITY,
-    CategoryName NVARCHAR(100) NOT NULL,
-    Description NVARCHAR(255)
 );
 
 -- Tabla de Logs de Auditoría
