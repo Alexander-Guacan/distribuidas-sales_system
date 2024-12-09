@@ -11,6 +11,7 @@ builder.Services.AddServiceModelServices(); // Agrega soporte para CoreWCF
 builder.Services.AddServiceModelMetadata(); // Permite publicar el WSDL
 
 var app = builder.Build();
+app.Urls.Add("http://0.0.0.0:5272/");
 
 // Configurar middleware de CoreWCF
 app.UseServiceModel(serviceBuilder =>
@@ -32,6 +33,7 @@ app.UseServiceModel(serviceBuilder =>
     var serviceMetadataBehavior = app.Services.GetRequiredService<ServiceMetadataBehavior>();
     serviceMetadataBehavior.HttpGetEnabled = true;  // Publicar WSDL por HTTP
     serviceMetadataBehavior.HttpsGetEnabled = false; // Desactivar HTTPS si no está configurado
+    // serviceMetadataBehavior.HttpGetUrl = new Uri("http://0.0.0.0:5272/"); // Desactivar HTTPS si no está configurado
 });
 
 app.Run();
