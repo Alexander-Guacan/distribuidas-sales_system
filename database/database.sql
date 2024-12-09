@@ -132,8 +132,7 @@ VALUES
     (@EmployeeRoleId, @RetrieveProductId),
     (@EmployeeRoleId, @UpdateProductId),
     (@EmployeeRoleId, @DeleteProductId),
-    (@EmployeeRoleId, @RetrieveCategoryId),  -- Solo puede consultar categorías
-    (@EmployeeRoleId, @RetrieveUserId);      -- Solo puede consultar usuarios
+    (@EmployeeRoleId, @RetrieveCategoryId); -- Solo puede consultar categorías
 
     -- Asignar permisos al rol Client
 DECLARE @ClientRoleId INT = (SELECT RoleId FROM Roles WHERE RoleName = 'Client');
