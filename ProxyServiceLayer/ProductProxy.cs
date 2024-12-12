@@ -1,4 +1,4 @@
-﻿using ServiceLayerContract;
+﻿using ServiceContractLayer;
 using Entities;
 
 namespace ProxyServiceLayer;

@@ -1,6 +1,6 @@
 using BusinessLogicLayer;
 using Entities;
-using ServiceLayerContract;
+using ServiceContractLayer;
 
 namespace SoapServiceLayer.Controllers;
 

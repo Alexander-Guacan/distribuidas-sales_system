@@ -1,5 +1,5 @@
 using Entities;
-using ServiceLayerContract;
+using ServiceContractLayer;
 
 namespace ProxyServiceLayer;
 

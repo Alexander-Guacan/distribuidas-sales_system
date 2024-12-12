@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{1938CA2F-431D-4AFE-BC42-9E8B0D3B06F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayerContract", "ServiceLayerContract\ServiceLayerContract.csproj", "{46C2F1DC-2B52-4885-B5D3-066859DB966E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceContractLayer", "ServiceContractLayer\ServiceContractLayer.csproj", "{7D2D9FCE-FCAA-4773-9C6D-5815E2DE6DC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceLayer", "SoapServiceLayer\SoapServiceLayer.csproj", "{E5636606-D5E3-4962-90EE-28B8AAF009F7}"
 EndProject
@@ -75,6 +75,10 @@ Global
 		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D2D9FCE-FCAA-4773-9C6D-5815E2DE6DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2D9FCE-FCAA-4773-9C6D-5815E2DE6DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2D9FCE-FCAA-4773-9C6D-5815E2DE6DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2D9FCE-FCAA-4773-9C6D-5815E2DE6DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

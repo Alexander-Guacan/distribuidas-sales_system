@@ -1,7 +1,7 @@
 using CoreWCF;
 using CoreWCF.Configuration;
 using CoreWCF.Description;
-using ServiceLayerContract;
+using ServiceContractLayer;
 using SoapServiceLayer.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);

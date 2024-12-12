@@ -2,7 +2,7 @@
 using BusinessLogicLayer;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayerContract;
+using ServiceContractLayer;
 
 namespace RestServiceLayer.Controllers
 {

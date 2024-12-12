@@ -1,7 +1,7 @@
 using CoreWCF;
 using Entities;
 
-namespace ServiceLayerContract;
+namespace ServiceContractLayer;
 
 [ServiceContract]
 public interface IPermissionService
