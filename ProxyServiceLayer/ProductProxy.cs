@@ -1,7 +1,7 @@
 ﻿using ServiceLayerContract;
 using Entities;
 
-namespace NWindProxyService;
+namespace ProxyServiceLayer;
 
 public class ProductProxy : Proxy, IProductService
 {

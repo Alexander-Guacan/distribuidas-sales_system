@@ -1,7 +1,7 @@
 using Entities;
 using ServiceLayerContract;
 
-namespace NWindProxyService;
+namespace ProxyServiceLayer;
 
 public class CategoryProxy : Proxy, ICategoryService
 {

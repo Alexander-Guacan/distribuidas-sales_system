@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace NWindProxyService;
+namespace ProxyServiceLayer;
 
 public class Proxy
 {

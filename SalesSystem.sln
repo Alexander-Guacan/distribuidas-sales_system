@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceLayer", "SoapSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestServiceLayer", "RestServiceLayer\RestServiceLayer.csproj", "{C2C0E782-7155-42F8-BD2C-6C3FA70D541A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NWindProxyService", "ProxyServiceLayer\NWindProxyService.csproj", "{609A4A9F-9626-449D-BE78-4EC424906C81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyServiceLayer", "ProxyServiceLayer\ProxyServiceLayer.csproj", "{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppLayer", "WebAppLayer\WebAppLayer.csproj", "{14BFB2DC-AE89-47D8-92AD-AF25776D8385}"
 EndProject
@@ -71,6 +71,10 @@ Global
 		{14BFB2DC-AE89-47D8-92AD-AF25776D8385}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14BFB2DC-AE89-47D8-92AD-AF25776D8385}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14BFB2DC-AE89-47D8-92AD-AF25776D8385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C734D87C-9888-4764-8F8E-7E5B8DCA5C2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
