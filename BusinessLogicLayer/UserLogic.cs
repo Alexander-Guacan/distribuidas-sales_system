@@ -40,6 +40,20 @@ public class UserLogic
         return result;
     }
 
+    // LEER POR EMAIL
+    public User RetrieveByEmail(string email)
+    {
+        User? result = null;
+
+        using (var repository = RepositoryFactory.CreateRepository())
+        {
+            result = repository.Retrieve<User>(u => u.Email == email);
+        }
+
+        return result;
+    }
+
+
     //ACTUALIZAR
     public bool Update(User userToUpdate)
     {
