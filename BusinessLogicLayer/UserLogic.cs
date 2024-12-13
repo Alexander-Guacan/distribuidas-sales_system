@@ -20,6 +20,8 @@ public class UserLogic
                 // Hash de la contraseña antes de guardar (ejemplo usando BCrypt)
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                 result = repository.Create(user);
+                var emailServiceLogic = new EmailServiceLogic();
+                emailServiceLogic.SendEmailAsync(user.Email, "Registro en el sistema", "Buenas, se acaba de crear una cuenta en nuestro servicio con tu correo").Wait();
             }
             else
             {
