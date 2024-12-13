@@ -1,61 +1,75 @@
+using Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebAppLayer.Models;
+using ProxyServiceLayer;
+using System.Security.Claims;
 
-namespace WebAppLayer.Controllers
+namespace WebAppLayer.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    // Vista de login
+    [HttpGet]
+    [AllowAnonymous] // Permitir acceso sin autenticación
+    public IActionResult Login()
     {
-        // Lista estática de usuarios para pruebas (se puede usar una base de datos en producción)
-        private static readonly List<User> Users = new()
-        {
-            new User { Username = "admin", Password = "Admin123", Role = Role.Admin },
-            new User { Username = "viewer", Password = "Viewer123", Role = Role.Employee },
-            new User { Username = "client", Password = "Client123", Role = Role.Client }
-        };
+        return View();
+    }
 
-        // Vista de login
-        public IActionResult Login()
+    // Manejar el login con validación del usuario
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous] // Permitir acceso sin autenticación
+    public async Task<IActionResult> Login(string email, string password)
+    {
+        var authProxy = new AuthProxy();
+
+        // Simulación de autenticación mediante un servicio
+        User? user = authProxy.Login(new User { Email = email, Password = password });
+
+        if (user == null || user.Role == null)
         {
+            ViewBag.Error = "Invalid username or password.";
             return View();
         }
 
-        // Maneja el login con la validación del usuario
-        [HttpPost]
-        public IActionResult Login(string username, string password)
+        // Crear las claims del usuario (email, rol, etc.)
+        var claims = new List<Claim>
         {
-            var user = Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role.RoleName) // Asignar el rol
+        };
 
-            if (user == null)
-            {
-                ViewBag.Error = "Invalid username or password.";
-                return View();
-            }
-
-            // Guardar el rol como una cadena y el nombre de usuario en la sesión
-            HttpContext.Session.SetString("Role", user.Role.ToString()); // Convertimos el Role a string
-            HttpContext.Session.SetString("Username", user.Username);
-
-            ViewBag.Role = user.Role;
-            if (user.Role == Role.Admin)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else if (user.Role == Role.Employee)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else if (user.Role == Role.Client)
-            {
-                return RedirectToAction("Index", "Product");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        // Cierra sesión y limpia la sesión
-        public IActionResult Logout()
+        // Crear el principal con las claims
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var authProperties = new AuthenticationProperties
         {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
+            IsPersistent = true, // Mantener sesión después de cerrar navegador
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(2) // Duración de la sesión
+        };
+
+        // Registrar la autenticación del usuario
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+        return RedirectToAction("Index", "Home"); // Redirigir a Home
+    }
+
+    // Cierra la sesión del usuario y limpia los datos
+    [HttpGet]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); // Cerrar sesión
+        return RedirectToAction("Login", "Account");
+    }
+
+    // Vista de acceso denegado
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 }

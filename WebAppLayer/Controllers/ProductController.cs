@@ -1,51 +1,75 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Entities;
+using Microsoft.AspNetCore.Authorization;
+using ProxyServiceLayer;
+using WebAppLayer.Models;
 
-namespace WebAppLayer.Controllers
+namespace WebAppLayer.Controllers;
+
+[Authorize]
+public class ProductController : Controller
 {
-    public class ProductController : Controller
+    private readonly ProductViewModel _productViewModel;
+
+    public ProductController()
     {
-        // Acción GET: Los roles 'Client', 'Employee' y 'Admin' tienen acceso
-        public IActionResult Index()
-        {
-            var userRole = HttpContext.Session.GetString("Role");
-            if (userRole == "Client" || userRole == "Employee" || userRole == "Admin")
-            {
-                return View();
-            }
-            return RedirectToAction("Login", "Account"); // Redirige si el rol no tiene acceso
-        }
+        _productViewModel = new ProductViewModel();
+    }
 
-        // Acción POST: Solo los roles 'Admin' y 'Employee' pueden hacer un POST
-        [HttpPost]
-        public IActionResult Index(Product product)
-        {
-            var userRole = HttpContext.Session.GetString("Role");
-            if (userRole == "Client")
-            {
-                return RedirectToAction("Index"); // Redirige si el rol es Client y trata de hacer un POST
-            }
+    // Acción GET: Los roles 'Client', 'Employee' y 'Admin' tienen acceso
+    [HttpGet]
+    public IActionResult Index()
+    {
+        // No necesitas validar los roles aquí porque todos los usuarios autenticados tienen acceso.
+        var productProxy = new ProductProxy();
+        var products = productProxy.GetProducts();
+        _productViewModel.Products = products;
+        return View(_productViewModel);
+    }
 
-            if (userRole == "Admin" || userRole == "Employee")
-            {
-                // Lógica para agregar un producto, por ejemplo
-                // _productService.AddProduct(product);
+    // Acción POST: Solo los roles 'Admin' y 'Employee' pueden agregar productos
+    [Authorize(Roles = "Admin,Employee")]
+    [HttpPost]
+    public IActionResult Create(Product product)
+    {
+        var productProxy = new ProductProxy();
+        var result = productProxy.Create(product);
+        _productViewModel.Error = result == null ? "Producto no pudo ser guardado" : "";
+        return RedirectToAction("Index");
+    }
 
-                return RedirectToAction("Manage"); // Redirige a la gestión de productos si el POST es exitoso
-            }
+    // Acción GET: Solo los roles 'Admin' y 'Employee' pueden gestionar productos
 
-            return RedirectToAction("Login", "Account"); // Redirige si el rol no tiene acceso
-        }
+    [HttpGet]
+    public IActionResult Search(int productId)
+    {
+        var productProxy = new ProductProxy();
+        var productFound = productProxy.RetrieveById(productId);
+        _productViewModel.Products = productProxy.GetProducts();
+        _productViewModel.ProductSearch = productFound; // Asignar el producto encontrado
+        _productViewModel.Error = productFound == null ? "Product not found" : ""; // Error si el producto no se encuentra
 
-        public IActionResult Manage()
-        {
-            var userRole = HttpContext.Session.GetString("Role");
-            if (userRole == "Admin" || userRole == "Viewer")
-            {
-                return View();
-            }
-            return RedirectToAction("Index", "Product"); // Redirige si no es admin ni viewer
-        }
+        return View("Index", _productViewModel); // Pasar el modelo a la vista
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin,Employee")]
+    public IActionResult Delete(int id)
+    {
+        var productProxy = new ProductProxy();
+        bool isDeleted = productProxy.Delete(id);
+        _productViewModel.Error = isDeleted ? "" : "Product cannot be deleted";
+
+        return RedirectToAction("Index");
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin,Employee")]
+    public IActionResult Update(Product product) {
+        var productProxy = new ProductProxy();
+        bool isUpdated = productProxy.Update(product);
+        _productViewModel.Error = isUpdated ? "" : "Product cannot be updated";
+
+        return RedirectToAction("Index");
     }
 }

@@ -1,74 +1,74 @@
+@using System.Security.Claims
+@using Entities
+@model ProductViewModel
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    if (User.Identity == null) return;
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
+    var products = Model.Products;
 }
 
 <h1>Product Management</h1>
 
-@{
-    var role = "Client"; // Cambia esto según el rol que quieras probar
-}
+<div class="product-search">
+    <h2>Search Product by ID</h2>
+    <form asp-action="Search" method="get">
+        <div class="form-group">
+            <label for="productId">Product ID:</label>
+            <input type="number" id="productId" name="productId" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+    @if (Model.ProductSearch != null)
+    {
+        Product productSearch = Model.ProductSearch;
+        <div class="product-details">
+            <h3>Product Details</h3>
+            <p><strong>Name:</strong> @productSearch.ProductName</p>
+            <p><strong>Unit Price:</strong> @productSearch.UnitPrice</p>
+            <p><strong>Units in Stock:</strong> @productSearch.UnitsInStock</p>
+        </div>
+    }
 
+    @if (Model.Error != null)
+    {
+        <p class="text-danger">@Model.Error</p>
+    }
+</div>
 
-@* @if (HttpContext.Session.GetString("Role") == "Admin" || HttpContext.Session.GetString("Role") == "Employee") *@
-
-@if (role == "Client")
+@if (role == Roles.Admin || role == Roles.Employee)
 {
-
-    <div class="product-search">
-        <h2>Search Product by ID</h2>
-        <form asp-action="Search" method="get">
-            <div class="form-group">
-                <label for="productId">Product ID:</label>
-                <input type="number" id="productId" name="id" class="form-control" required />
-            </div>
-            <button type="submit" class="btn btn-secondary">Search</button>
-        </form>
-        @if (ViewBag.Product != null)
-        {
-            var product = ViewBag.Product;
-            <div class="product-details">
-                <h3>Product Details</h3>
-                <p><strong>Name:</strong> @product.Name</p>
-                <p><strong>Description:</strong> @product.Description</p>
-                <p><strong>Price:</strong> @product.Price</p>
-            </div>
-        }
-    </div>
-
-    
-}
-
-@if (role == "Admin" || role == "Employee"){
     <div class="product-table">
         <h2>Manage Products</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
+                    <th>Unit Price</th>
+                    <th>Units in Stock</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @if (Model == null || Model.Count == 0)
+                @if (products == null || products.Count == 0)
                 {
                     <tr>
-                        <td colspan="4" class="text-center">No products found</td>
+                        <td colspan="5" class="text-center">No products found</td>
                     </tr>
                 }
                 else
                 {
-                    foreach (var product in Model)
+                    foreach (var product in products)
                     {
                         <tr>
-                            <td>@product.Name</td>
-                            <td>@product.Description</td>
-                            <td>@product.Price</td>
+                            <td>@product.ProductId</td>
+                            <td>@product.ProductName</td>
+                            <td>@product.UnitPrice</td>
+                            <td>@product.UnitsInStock</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                                <a asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     }
@@ -76,77 +76,54 @@
             </tbody>
         </table>
     </div>
-    
-}
 
-@if (role == "Admin" || role == "Employee")
-{
-    <div class="product-table">
-        <h2>Manage Products</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model == null || Model.Count == 0)
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">No products found</td>
-                    </tr>
-                }
-                else
-                {
-                    foreach (var product in Model)
-                    {
-                        <tr>
-                            <td>@product.Name</td>
-                            <td>@product.Description</td>
-                            <td>@product.Price</td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-}
-
-@if (role == "Admin" || role == "Employee")
-{
     <div class="product-form">
         <h2>Add Product</h2>
-        <form asp-action="Index" method="post">
+        <form asp-action="Create" method="post">
             <div class="form-group">
                 <label for="name">Product Name:</label>
-                <input type="text" id="name" name="Product.Name" class="form-control" required />
+                <input type="text" id="name" name="Product.ProductName" class="form-control" required />
             </div>
             <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="Product.Description" class="form-control" required></textarea>
+                <label for="category">Category Id:</label>
+                <input id="category" name="Product.CategoryId" class="form-control" required />
             </div>
             <div class="form-group">
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="Product.Price" step="0.01" class="form-control" required />
+                <label for="price">Unit Price:</label>
+                <input type="number" id="price" name="Product.UnitPrice" step="0.01" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="price">Units in Stock</label>
+                <input type="number" id="units" name="Product.UnitsInStock" step="0.01" class="form-control" required />
             </div>
             <button type="submit" class="btn btn-primary">Add Product</button>
         </form>
     </div>
-}
 
-@if (ViewBag.Error != null)
-{
-    <p class="text-danger">@ViewBag.Error</p>
-}
-
-@if (ViewBag.Message != null)
-{
-    <p class="text-success">@ViewBag.Message</p>
+    <div class="product-form">
+        <h2>Edit Product</h2>
+        <form asp-action="Update" method="post">
+            <div class="form-group">
+                <label for="name">Product Id:</label>
+                <input type="text" id="name" name="Product.ProductId" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="Product.ProductName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="category">Category Id:</label>
+                <input id="category" name="Product.CategoryId" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="price">Unit Price:</label>
+                <input type="number" id="price" name="Product.UnitPrice" step="0.01" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="price">Units in Stock</label>
+                <input type="number" id="units" name="Product.UnitsInStock" step="0.01" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Update Product</button>
+        </form>
+    </div>
 }

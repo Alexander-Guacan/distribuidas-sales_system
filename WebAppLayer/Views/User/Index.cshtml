@@ -3,28 +3,31 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>User Management</h1>
 
-<div class="user-search">
-    <h2>Search User by ID</h2>
-    <form asp-action="Search" method="get">
-        <div class="form-group">
-            <label for="userId">User ID:</label>
-            <input type="number" id="userId" name="id" class="form-control" required />
-        </div>
-        <button type="submit" class="btn btn-secondary">Search</button>
-    </form>
-    @if (ViewBag.User != null)
-    {
-        var user = ViewBag.User;
-        <div class="user-details mt-4">
-            <h3>User Details</h3>
-            <p><strong>Name:</strong> @user.UserName</p>
-            <p><strong>Email:</strong> @user.Email</p>
-            <p><strong>Is Active:</strong> @(user.IsActive ? "Yes" : "No")</p>
-            <p><strong>Last Login:</strong> @user.LastLogin?.ToString("g")</p>
-        </div>
-    }
+<div class="user-table mt-5">
+    <h1>User Filter</h1>
+
+    <div class="user-search">
+        <h2>Search User by ID</h2>
+        <form asp-action="Search" method="post">
+            <div class="form-group">
+                <label for="userId">User ID:</label>
+                <input type="number" id="userId" name="id" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+        @if (ViewBag.User != null)
+        {
+            var user = ViewBag.User;
+            <div class="user-details mt-4">
+                <h3>User Details</h3>
+                <p><strong>Name:</strong> @user.UserName</p>
+                <p><strong>Email:</strong> @user.Email</p>
+                <p><strong>Is Active:</strong> @(user.IsActive ? "Yes" : "No")</p>
+                <p><strong>Last Login:</strong> @user.LastLogin?.ToString("g")</p>
+            </div>
+        }
+    </div>
 </div>
 
 <div class="user-table mt-5">
@@ -90,13 +93,3 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
-
-@if (ViewBag.Error != null)
-{
-    <p class="text-danger">@ViewBag.Error</p>
-}
-
-@if (ViewBag.Message != null)
-{
-    <p class="text-success">@ViewBag.Message</p>
-}
