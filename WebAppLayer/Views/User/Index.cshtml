@@ -1,95 +1,134 @@
+@using System.Security.Claims
+@using Entities
+@model UserViewModel
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    if (User.Identity == null) return;
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
+    var Users = Model.Users;
 }
 
+<h1>User Management</h1>
 
-<div class="user-table mt-5">
-    <h1>User Filter</h1>
+<div class="User-search">
+    <h2>Search User by ID</h2>
+    <form asp-action="Search" method="get">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label for="UserId">User ID:</label>
+            <input type="number" id="UserId" name="UserId" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+    @if (Model.UserSearch != null)
+    {
+        User UserSearch = Model.UserSearch;
+        <div class="User-details">
+            <h3>User Details</h3>
+            <p><strong>Name:</strong> @UserSearch.UserName</p>
+            <p><strong>Email:</strong> @UserSearch.Email</p>
+            <p><strong>Last Login:</strong> @UserSearch.LastLogin</p>
+            <p><strong>Role ID:</strong> @UserSearch.RoleId</p>
+        </div>
+    }
 
-    <div class="user-search">
-        <h2>Search User by ID</h2>
-        <form asp-action="Search" method="post">
-            <div class="form-group">
-                <label for="userId">User ID:</label>
-                <input type="number" id="userId" name="id" class="form-control" required />
-            </div>
-            <button type="submit" class="btn btn-secondary">Search</button>
-        </form>
-        @if (ViewBag.User != null)
-        {
-            var user = ViewBag.User;
-            <div class="user-details mt-4">
-                <h3>User Details</h3>
-                <p><strong>Name:</strong> @user.UserName</p>
-                <p><strong>Email:</strong> @user.Email</p>
-                <p><strong>Is Active:</strong> @(user.IsActive ? "Yes" : "No")</p>
-                <p><strong>Last Login:</strong> @user.LastLogin?.ToString("g")</p>
-            </div>
-        }
-    </div>
+    @if (Model.Error != null)
+    {
+        <p class="text-danger">@Model.Error</p>
+    }
 </div>
 
-<div class="user-table mt-5">
-    <h2>Manage Users</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Is Active</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model == null || Model.Count == 0)
-            {
+@if (role == Roles.Admin)
+{
+    <div class="User-table">
+        <h2>Manage Users</h2>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td colspan="4" class="text-center">No users found</td>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Last Login</th>
+                    <th>Role ID</th>
                 </tr>
-            }
-            else
-            {
-                foreach (var user in Model)
+            </thead>
+            <tbody>
+                @if (Users == null || Users.Count == 0)
                 {
                     <tr>
-                        <td>@user.UserName</td>
-                        <td>@user.Email</td>
-                        <td>@(user.IsActive ? "Yes" : "No")</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-warning btn-sm">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@user.UserId" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+                        <td colspan="5" class="text-center">No Users found</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
-</div>
+                else
+                {
+                    foreach (var User in Users)
+                    {
+                        <tr>
+                            <td>@User.UserId</td>
+                            <td>@User.UserName</td>
+                            <td>@User.Email</td>
+                            <td>@User.LastLogin</td>
+                            <td>@User.RoleId</td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@User.UserId" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 
-<div class="user-form mt-5">
-    <h2>Add / Update User</h2>
-    <form asp-action="Save" method="post">
-        <input type="hidden" id="userId" name="User.UserId" value="@(ViewBag.User?.UserId ?? 0)" />
-        <div class="form-group">
-            <label for="userName">User Name:</label>
-            <input type="text" id="userName" name="User.UserName" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="User.Email" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="User.Password" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="isActive">Is Active:</label>
-            <select id="isActive" name="User.IsActive" class="form-control">
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
+    <div class="User-form">
+        <h2>Add User</h2>
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="nameUs">User Name:</label>
+                <input type="text" id="nameUs" name="User.UserName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="UserEmail">Email:</label>
+                <input type="email" id="UserEmail" name="User.Email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="UserPass">Password:</label>
+                <input type="password" id="UserPass" name="User.Password" class="form-control" required />
+            </div>
+             <div class="form-group">
+                <label for="UserRole">Role ID:</label>
+                <input type="number" id="UserRole" name="User.RoleId" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+        </form>
+    </div>
+
+    <div class="User-form">
+        <h2>Edit User</h2>
+        <form asp-action="Update" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="UserID">User Id:</label>
+                <input type="number" id="UserID" name="User.UserId" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="UserName">User Name:</label>
+                <input type="text" id="UserName" name="User.UserName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="emailUser">User Email:</label>
+                <input type="email" id="emailUser" name="User.Email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="passUser">User Password:</label>
+                <input type="password" id="passUser" name="User.Password" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="roleUser">Role ID:</label>
+                <input type="number" id="roleUser" name="User.RoleId" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Update User</button>
+        </form>
+    </div>
+}

@@ -97,6 +97,7 @@ public class UserLogic
                     existingUser.LastLogin = userToUpdate.LastLogin;
                     existingUser.FailedLoginAttempts = userToUpdate.FailedLoginAttempts;
                     existingUser.LockoutTime = userToUpdate.LockoutTime;
+                    existingUser.RoleId = userToUpdate.RoleId;
 
                     // Guardar los cambios
                     result = repository.Update(existingUser);

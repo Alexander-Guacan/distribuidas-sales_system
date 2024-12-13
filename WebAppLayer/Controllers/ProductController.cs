@@ -29,6 +29,7 @@ public class ProductController : Controller
 
     // Acción POST: Solo los roles 'Admin' y 'Employee' pueden agregar productos
     [Authorize(Roles = "Admin,Employee")]
+    [ValidateAntiForgeryToken]
     [HttpPost]
     public IActionResult Create(Product product)
     {
@@ -64,6 +65,7 @@ public class ProductController : Controller
     }
     
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,Employee")]
     public IActionResult Update(Product product) {
         var productProxy = new ProductProxy();

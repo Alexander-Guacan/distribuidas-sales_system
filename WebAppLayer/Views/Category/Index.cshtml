@@ -1,90 +1,113 @@
+@using System.Security.Claims
+@using Entities
+@model CategoryViewModel
 @{
-    ViewData["Title"] = "Category Management";
+    ViewData["Title"] = "Categories";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    if (User.Identity == null) return;
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
+    var Categories = Model.Categories;
 }
 
 <h1>Category Management</h1>
 
-
-
-
-<div class="category-search">
+<div class="Category-search">
     <h2>Search Category by ID</h2>
     <form asp-action="Search" method="get">
+        @Html.AntiForgeryToken()
         <div class="form-group">
-            <label for="categoryId">Category ID:</label>
-            <input type="number" id="categoryId" name="id" class="form-control" required />
+            <label for="CategoryId">Category ID:</label>
+            <input type="number" id="CategoryId" name="CategoryId" class="form-control" required />
         </div>
         <button type="submit" class="btn btn-secondary">Search</button>
     </form>
-    @if (ViewBag.Category != null)
+    @if (Model.CategorySearch != null)
     {
-        var category = ViewBag.Category;
-        <div class="category-details mt-4">
+        Category CategorySearch = Model.CategorySearch;
+        <div class="Category-details">
             <h3>Category Details</h3>
-            <p><strong>Name:</strong> @category.CategoryName</p>
-            <p><strong>Description:</strong> @category.Description</p>
+            <p><strong>Name:</strong> @CategorySearch.CategoryName</p>
+            <p><strong>Unit Price:</strong> @CategorySearch.Description</p>
         </div>
+    }
+
+    @if (Model.Error != null)
+    {
+        <p class="text-danger">@Model.Error</p>
     }
 </div>
 
-<div class="category-table mt-5">
-    <h2>Manage Categories</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model == null || Model.Count == 0)
-            {
+@if (role == Roles.Admin || role == Roles.Employee)
+{
+    <div class="Category-table">
+        <h2>Manage Categories</h2>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td colspan="3" class="text-center">No categories found</td>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
                 </tr>
-            }
-            else
-            {
-                foreach (var category in Model)
+            </thead>
+            <tbody>
+                @if (Categories == null || Categories.Count == 0)
                 {
                     <tr>
-                        <td>@category.CategoryName</td>
-                        <td>@category.Description</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning btn-sm">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+                        <td colspan="4" class="text-center">No Categories found</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
-</div>
+                else
+                {
+                    foreach (var Category in Categories)
+                    {
+                        <tr>
+                            <td>@Category.CategoryId</td>
+                            <td>@Category.CategoryName</td>
+                            <td>@Category.Description</td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@Category.CategoryId" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 
-<div class="category-form mt-5">
-    <h2>Add / Update Category</h2>
-    <form asp-action="Save" method="post">
-        <input type="hidden" id="categoryId" name="Category.CategoryId" value="@(ViewBag.Category?.CategoryId ?? 0)" />
-        <div class="form-group">
-            <label for="categoryName">Category Name:</label>
-            <input type="text" id="categoryName" name="Category.CategoryName" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="Category.Description" class="form-control"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
+    <div class="Category-form">
+        <h2>Add Category</h2>
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="nameCat">Category Name:</label>
+                <input type="text" id="nameCat" name="Category.CategoryName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="categoryDesc">Category Description:</label>
+                <input id="categoryDesc" name="Category.Description" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
 
-@if (ViewBag.Error != null)
-{
-    <p class="text-danger">@ViewBag.Error</p>
-}
-
-@if (ViewBag.Message != null)
-{
-    <p class="text-success">@ViewBag.Message</p>
+    <div class="Category-form">
+        <h2>Edit Category</h2>
+        <form asp-action="Update" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="categoryID">Category Id:</label>
+                <input type="number" id="categoryID" name="Category.CategoryId" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="categoryName">Category Name:</label>
+                <input type="text" id="categoryName" name="Category.CategoryName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="categoryDescription">Category Description:</label>
+                <input id="categoryDescription" name="Category.Description" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Update Category</button>
+        </form>
+    </div>
 }
