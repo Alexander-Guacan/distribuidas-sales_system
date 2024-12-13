@@ -1,0 +1,152 @@
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Product Management</h1>
+
+@{
+    var role = "Client"; // Cambia esto según el rol que quieras probar
+}
+
+
+@* @if (HttpContext.Session.GetString("Role") == "Admin" || HttpContext.Session.GetString("Role") == "Employee") *@
+
+@if (role == "Client")
+{
+
+    <div class="product-search">
+        <h2>Search Product by ID</h2>
+        <form asp-action="Search" method="get">
+            <div class="form-group">
+                <label for="productId">Product ID:</label>
+                <input type="number" id="productId" name="id" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+        @if (ViewBag.Product != null)
+        {
+            var product = ViewBag.Product;
+            <div class="product-details">
+                <h3>Product Details</h3>
+                <p><strong>Name:</strong> @product.Name</p>
+                <p><strong>Description:</strong> @product.Description</p>
+                <p><strong>Price:</strong> @product.Price</p>
+            </div>
+        }
+    </div>
+
+    
+}
+
+@if (role == "Admin" || role == "Employee"){
+    <div class="product-table">
+        <h2>Manage Products</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">No products found</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Description</td>
+                            <td>@product.Price</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    
+}
+
+@if (role == "Admin" || role == "Employee")
+{
+    <div class="product-table">
+        <h2>Manage Products</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">No products found</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Description</td>
+                            <td>@product.Price</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (role == "Admin" || role == "Employee")
+{
+    <div class="product-form">
+        <h2>Add Product</h2>
+        <form asp-action="Index" method="post">
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="Product.Name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="Product.Description" class="form-control" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="Product.Price" step="0.01" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+        </form>
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <p class="text-danger">@ViewBag.Error</p>
+}
+
+@if (ViewBag.Message != null)
+{
+    <p class="text-success">@ViewBag.Message</p>
+}

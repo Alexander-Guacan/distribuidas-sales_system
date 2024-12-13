@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "Category Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Category Management</h1>
+
+
+
+
+<div class="category-search">
+    <h2>Search Category by ID</h2>
+    <form asp-action="Search" method="get">
+        <div class="form-group">
+            <label for="categoryId">Category ID:</label>
+            <input type="number" id="categoryId" name="id" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+    @if (ViewBag.Category != null)
+    {
+        var category = ViewBag.Category;
+        <div class="category-details mt-4">
+            <h3>Category Details</h3>
+            <p><strong>Name:</strong> @category.CategoryName</p>
+            <p><strong>Description:</strong> @category.Description</p>
+        </div>
+    }
+</div>
+
+<div class="category-table mt-5">
+    <h2>Manage Categories</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="3" class="text-center">No categories found</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var category in Model)
+                {
+                    <tr>
+                        <td>@category.CategoryName</td>
+                        <td>@category.Description</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="category-form mt-5">
+    <h2>Add / Update Category</h2>
+    <form asp-action="Save" method="post">
+        <input type="hidden" id="categoryId" name="Category.CategoryId" value="@(ViewBag.Category?.CategoryId ?? 0)" />
+        <div class="form-group">
+            <label for="categoryName">Category Name:</label>
+            <input type="text" id="categoryName" name="Category.CategoryName" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="Category.Description" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <p class="text-danger">@ViewBag.Error</p>
+}
+
+@if (ViewBag.Message != null)
+{
+    <p class="text-success">@ViewBag.Message</p>
+}
