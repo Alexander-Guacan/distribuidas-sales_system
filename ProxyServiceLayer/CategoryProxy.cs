@@ -54,4 +54,16 @@ public class CategoryProxy : Proxy, ICategoryService
         Task.Run(async () => result = await DeleteAsync(id)).Wait();
         return result;
     }
+
+    public async Task<List<Category>> GetCategoriesAsync()
+    {
+        return await SendGet<List<Category>>($"{_baseApiUrl}");
+    }
+
+    public List<Category> GetCategories()
+    {
+        var result = new List<Category>();
+        Task.Run(async () => result = await GetCategoriesAsync()).Wait();
+        return result;
+    }
 }

@@ -6,7 +6,7 @@ using ServiceContractLayer;
 namespace RestServiceLayer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductController : IProductService
     {
         [HttpPost]
@@ -25,12 +25,20 @@ namespace RestServiceLayer.Controllers
             return isDeleted;
         }
 
-        [HttpGet("CategoryId/{categoryId}")]
+        [HttpGet("Category/{categoryId}")]
         public List<Product> FilterByCategoryId(int categoryId)
         {
             var productLogic = new ProductLogic();
             var productsFiltered = productLogic.FilterByCategoryId(categoryId);
             return productsFiltered;
+        }
+
+        [HttpGet]
+        public List<Product> GetProducts()
+        {
+            var productLogic = new ProductLogic();
+            var activeProducts = productLogic.GetProducts();
+            return activeProducts;
         }
 
         [HttpGet("{id}")]

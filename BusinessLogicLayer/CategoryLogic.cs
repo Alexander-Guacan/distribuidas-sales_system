@@ -11,11 +11,13 @@ public class CategoryLogic
 
         using (var repository = RepositoryFactory.CreateRepository())
         {
-            Category res = repository.Retrieve<Category>(c => c.CategoryId == category.CategoryId);
+            Category res = repository.Retrieve<Category>(c => c.CategoryName == category.CategoryName);
 
             if (res == null)
             {
                 result = repository.Create(category);
+            } else {
+                throw new Exception("This category is already registered, try another name.");
             }
         }
 
@@ -63,6 +65,18 @@ public class CategoryLogic
                 var category = RetrieveById(id);
                 result = repository.Delete(category);
             }
+        }
+
+        return result;
+    }
+
+    public List<Category> GetCategories()
+    {
+        var result = new List<Category>();
+
+        using (var repository = RepositoryFactory.CreateRepository())
+        {
+            result = repository.Filter<Category>(c => c != null);
         }
 
         return result;

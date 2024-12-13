@@ -16,7 +16,11 @@ public class ProductLogic
             if (res == null)
             {
                 result = repository.Create(newProduct);
-            } // TODO: Throw product exist exception
+            }
+            else
+            {
+                throw new Exception("This product is already registered, try another name.");
+            }
         }
 
         return result;
@@ -54,7 +58,7 @@ public class ProductLogic
     public bool Delete(int id)
     {
         var product = RetrieveById(id);
-        if (product == null || product.UnitsInStock > 0) return false;
+        if (product == null) return false;
 
         using var repository = RepositoryFactory.CreateRepository();
         return repository.Delete(product);
@@ -67,6 +71,18 @@ public class ProductLogic
         using (var repository = RepositoryFactory.CreateRepository())
         {
             result = repository.Filter<Product>(p => p.CategoryId == categoryId);
+        }
+
+        return result;
+    }
+
+    public List<Product> GetProducts()
+    {
+        var result = new List<Product>();
+
+        using (var repository = RepositoryFactory.CreateRepository())
+        {
+            result = repository.Filter<Product>(p => p.UnitsInStock > 0);
         }
 
         return result;

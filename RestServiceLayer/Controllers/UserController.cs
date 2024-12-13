@@ -6,7 +6,7 @@ using ServiceContractLayer;
 namespace RestServiceLayer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : IUserService
     {
         [HttpPost]
@@ -23,6 +23,15 @@ namespace RestServiceLayer.Controllers
             var userLogic = new UserLogic();
             var isDeleted = userLogic.Delete(id);
             return isDeleted;
+        }
+
+        [HttpGet]
+        public List<User> GetUsers()
+        {
+            var userLogic = new UserLogic();
+            var users = userLogic.GetUsers();
+            return users;
+
         }
 
         [HttpGet("{id}")]

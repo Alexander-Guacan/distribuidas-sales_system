@@ -6,7 +6,7 @@ namespace ProxyServiceLayer;
 
 public class Proxy
 {
-    private readonly string _baseAdress = "http://localhost:5030";
+    private readonly string _baseAddress = "http://localhost:5030/api";
 
     public async Task<T> SendPost<T, PostData>(string requestURI, PostData data)
     {
@@ -15,7 +15,7 @@ public class Proxy
         {
             try
             {
-                requestURI = _baseAdress + requestURI;
+                requestURI = _baseAddress + requestURI;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -42,7 +42,7 @@ public class Proxy
         {
             try
             {
-                requestURI = _baseAdress + requestURI;
+                requestURI = _baseAddress + requestURI;
 
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -66,7 +66,7 @@ public class Proxy
         {
             try
             {
-                requestURI = _baseAdress + requestURI;
+                requestURI = _baseAddress + requestURI;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -93,7 +93,7 @@ public class Proxy
         {
             try
             {
-                requestURI = _baseAdress + requestURI;
+                requestURI = _baseAddress + requestURI;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

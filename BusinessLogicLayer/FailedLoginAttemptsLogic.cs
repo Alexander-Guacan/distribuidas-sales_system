@@ -12,6 +12,15 @@ public class FailedLoginAttemptLogic
 
         using (var repository = RepositoryFactory.CreateRepository())
         {
+            var auditLog = new AuditLog
+            {
+                Action = "Login attempt failed (Email or password incorrect)",
+                ActionDate = attempt.AttemptTime,
+                IpAddress = attempt.IpAddress,
+                UserId = attempt.UserId
+            };
+
+            repository.Create(auditLog);
             result = repository.Create(attempt);
         }
 

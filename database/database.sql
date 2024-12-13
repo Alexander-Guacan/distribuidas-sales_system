@@ -145,14 +145,14 @@ VALUES
     -- Insertar usuario admin
 INSERT INTO Users (UserName, Email, Password, RoleId)
 VALUES 
-('admin', 'adguacan@espe.edu.ec', '$2a$12$M/q7VytVT0YqyKv3NqxnjOOMOv/CdeLTdxGoFIEsc/ktQOjOJ15aO', (SELECT RoleId FROM Roles WHERE RoleName = 'Admin')); -- Admin&780 
+('admin', 'adguacan@espe.edu.ec', '$2a$12$.wRZIUbtfmuZPgC2J0py6et5qijdAUNO73KUBufSt6L6X9iwKLAii', (SELECT RoleId FROM Roles WHERE RoleName = 'Admin')); -- Admin&780 
 
 -- Insertar usuario employee
 INSERT INTO Users (UserName, Email, Password, RoleId)
 VALUES 
-('employee', 'employee@example.com', '$2a$12$eJQRDrGnRGL/QdQlxFpl9u9HIr5gJtTeUi0f1kyLtclVJDTjNCAGC', (SELECT RoleId FROM Roles WHERE RoleName = 'Employee')); -- Employee&780
+('employee', 'employee@example.com', '$2a$12$XXaG78ZNRMJ1xiBQEYBVWuVc/uBqhixh.KG.Tn5Zm5yBRIDfg7jrm', (SELECT RoleId FROM Roles WHERE RoleName = 'Employee')); -- Employee&780
 
 -- Insertar usuario client
 INSERT INTO Users (UserName, Email, Password, RoleId)
 VALUES 
-('client', 'client@example.com', '$2a$12$aAoyG4cZo4L8cj1VONrSgO/O5mCBYnJMTgE1lq7piZNxYbP9WKCoq', (SELECT RoleId FROM Roles WHERE RoleName = 'Client')); -- Client&780
+('client', 'client@example.com', '$2a$12$dKQAAeZU0n8FOPDUbbj4EuO4UO.C5HLZ9Rz2GVGgI0iUymnCFjHyG', (SELECT RoleId FROM Roles WHERE RoleName = 'Client')); -- Client&780

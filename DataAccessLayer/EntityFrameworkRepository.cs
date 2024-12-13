@@ -14,7 +14,7 @@ public class EntityFrameworkRepository : IRepository
 
     public TEntity Create<TEntity>(TEntity toCreate) where TEntity : class
     {
-        TEntity? result = default;
+        TEntity? result;
 
         try
         {
@@ -38,7 +38,9 @@ public class EntityFrameworkRepository : IRepository
         {
             _dbContext.Entry(toDelete).State = EntityState.Deleted;
             result = _dbContext.SaveChanges() > 0;
-        } catch (Exception) {
+        }
+        catch (Exception)
+        {
             throw;
         }
 
@@ -71,8 +73,8 @@ public class EntityFrameworkRepository : IRepository
 
     public TEntity Retrieve<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class
     {
-        
-        TEntity? result = null;
+
+        TEntity? result;
 
         try
         {
@@ -94,7 +96,9 @@ public class EntityFrameworkRepository : IRepository
         {
             _dbContext.Entry(toUpdate).State = EntityState.Modified;
             result = _dbContext.SaveChanges() > 0;
-        } catch (Exception) {
+        }
+        catch (Exception)
+        {
             throw;
         }
 

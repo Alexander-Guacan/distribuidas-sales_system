@@ -1,6 +1,5 @@
 using DataAccessLayer;
 using Entities;
-using BCrypt.Net;
 
 namespace BusinessLogicLayer;
 
@@ -21,6 +20,10 @@ public class UserLogic
                 // Hash de la contraseña antes de guardar (ejemplo usando BCrypt)
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                 result = repository.Create(user);
+            }
+            else
+            {
+                throw new Exception("This user is already registered, try with another email or user name");
             }
         }
 
@@ -53,9 +56,8 @@ public class UserLogic
         return result;
     }
 
-
     //ACTUALIZAR
-    public bool Update(User userToUpdate)
+    public bool Update(User userToUpdate, bool skipPasswordCheck = false)
     {
         bool result = false;
 
@@ -76,9 +78,21 @@ public class UserLogic
                     // Actualizar solo los campos permitidos
                     existingUser.UserName = userToUpdate.UserName;
                     existingUser.Email = userToUpdate.Email;
-                    existingUser.Password = string.IsNullOrEmpty(userToUpdate.Password)
-                        ? existingUser.Password
-                        : BCrypt.Net.BCrypt.HashPassword(userToUpdate.Password);
+
+                    // Verificar y manejar la contraseña si no se omite el chequeo
+                    if (!skipPasswordCheck)
+                    {
+                        // Define the desired work factor (e.g., 12 for a moderate level of security)
+                        const int workFactor = 12;
+
+                        if (!BCrypt.Net.BCrypt.Verify(userToUpdate.Password, existingUser.Password) &&
+                            !BCrypt.Net.BCrypt.PasswordNeedsRehash(existingUser.Password, workFactor))
+                        {
+                            // Encriptar la contraseña si no está actualizada al work factor deseado
+                            existingUser.Password = BCrypt.Net.BCrypt.HashPassword(userToUpdate.Password, workFactor);
+                        }
+                    }
+
                     existingUser.IsActive = userToUpdate.IsActive;
                     existingUser.LastLogin = userToUpdate.LastLogin;
                     existingUser.FailedLoginAttempts = userToUpdate.FailedLoginAttempts;
@@ -142,6 +156,18 @@ public class UserLogic
                 user.FailedLoginAttempts = 0;
                 result = repository.Update(user);
             }
+        }
+
+        return result;
+    }
+
+    public List<User> GetUsers()
+    {
+        var result = new List<User>();
+
+        using (var repository = RepositoryFactory.CreateRepository())
+        {
+            result = repository.Filter<User>(c => c != null);
         }
 
         return result;

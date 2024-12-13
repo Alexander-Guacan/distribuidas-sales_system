@@ -7,7 +7,7 @@ using ServiceContractLayer;
 namespace RestServiceLayer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CategoryController : ICategoryService
     {
         [HttpPost]
@@ -24,6 +24,14 @@ namespace RestServiceLayer.Controllers
             var categoryLogic = new CategoryLogic();
             var isDeleted = categoryLogic.Delete(id);
             return isDeleted;
+        }
+
+        [HttpGet]
+        public List<Category> GetCategories()
+        {
+            var categoryLogic = new CategoryLogic();
+            var categories = categoryLogic.GetCategories();
+            return categories;
         }
 
         [HttpGet("{id}")]

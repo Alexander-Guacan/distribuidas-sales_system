@@ -66,4 +66,14 @@ public class ProductProxy : Proxy, IProductService
         Task.Run(async () => result = await FilterByCategoryIdAsync(categoryId)).Wait();
         return result;
     }
+
+    public async Task<List<Product>> GetProductsAsync() {
+        return await SendGet<List<Product>>($"{_baseApiUrl}");
+    }
+    public List<Product> GetProducts()
+    {
+        var result = new List<Product>();
+        Task.Run(async () => result = await GetProductsAsync()).Wait();
+        return result;
+    }
 }
